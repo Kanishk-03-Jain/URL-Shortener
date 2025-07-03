@@ -24,11 +24,11 @@ class DatabaseService:
         
         # Get database configuration from environment variables
         self.db_config = {
-            'host': os.getenv('DB_HOST', 'database-insights388.cp64e82ey7dc.ap-south-1.rds.amazonaws.com'),
-            'port': int(os.getenv('DB_PORT', '5432')),
-            'dbname': os.getenv('DB_NAME', 'postgres'),
-            'user': os.getenv('DB_USER', 'postgres'),
-            'password': os.getenv('DB_PASSWORD', 'Thegoatronaldo7')
+            'host': os.getenv('DB_HOST'),
+            'port': int(os.getenv('DB_PORT')),
+            'dbname': os.getenv('DB_NAME'),
+            'user': os.getenv('DB_USER'),
+            'password': os.getenv('DB_PASSWORD')
         }
         
         # Initialize logger
