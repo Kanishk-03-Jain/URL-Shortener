@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
 from services.databaseServices import DatabaseService
 from routes.shortener import URLShortener
@@ -85,7 +85,7 @@ def shorten_url():
         return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/<hash>', methods=['GET'])
-def redirect(hash):
+def redirect_to_original(hash):
     """
     Redirects to the original URL based on the provided short URL.
     Args:
@@ -107,8 +107,10 @@ def redirect(hash):
         if not original_url:
             return jsonify({"error": "Short URL not found"}), 404
         
-        logger.info(f"Redirecting hash {hash}")
-        return jsonify({"original_url": original_url}), 302
+        logger.info(f"Redirecting hash {hash} to original URL {original_url}")
+        original_url = original_url.strip()
+        return redirect(original_url, code=302)
+        # return jsonify({"original_url": original_url}), 302
     except Exception as e:
         logger.error(f"Error during redirect: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
