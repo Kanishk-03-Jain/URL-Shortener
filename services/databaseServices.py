@@ -23,6 +23,12 @@ class DatabaseService:
         load_dotenv()
         
         # Get database configuration from environment variables
+        required_vars = ['DB_HOST', 'DB_PORT', 'DB_NAME', 'DB_USER', 'DB_PASSWORD']
+        missing_vars = [var for var in required_vars if not os.getenv(var)]
+        
+        if missing_vars:
+            raise ValueError(f"Missing required environment variables: {', '.join(missing_vars)}")
+        
         self.db_config = {
             'host': os.getenv('DB_HOST'),
             'port': int(os.getenv('DB_PORT')),
