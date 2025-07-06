@@ -1,6 +1,9 @@
-flask
-sqlalchemy
-psycopg2
-redis
-flask-migrate
-python-dotenv
+flask>=2.0.0
+flask-cors>=4.0.0
+sqlalchemy>=1.4.0
+psycopg2-binary>=2.9.0
+redis>=4.0.0
+flask-migrate>=3.1.0
+python-dotenv>=0.19.0
+flask-limiter>=2.1.0
+validators>=0.18.0
