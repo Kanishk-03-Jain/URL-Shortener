@@ -115,5 +115,10 @@ def redirect_to_original(hash):
         logger.error(f"Error during redirect: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
 
+@app.route('/test', methods=['POST'])
+def test_post():
+    return jsonify({"message": "POST works"}), 200
+
+
 if __name__ == '__main__':
     app.run(debug=config.DEBUG, host='0.0.0.0', port=5000)
