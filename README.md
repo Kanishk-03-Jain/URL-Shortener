@@ -2,6 +2,8 @@
 
 A full-stack URL shortener application that transforms long URLs into short, shareable links. Built with React frontend and Flask backend.
 
+## Try it out live: [URL Shortener](https://url-shortener-jainkanishk.vercel.app)
+
 ## Architecture
 
 ```
