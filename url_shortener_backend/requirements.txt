@@ -8,4 +8,4 @@ python-dotenv>=0.19.0
 flask-limiter>=2.1.0
 validators>=0.18.0
 pytz
-qr_code
+qrcode

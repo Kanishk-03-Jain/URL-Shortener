@@ -5,8 +5,8 @@ from routes.shortener import URLShortener
 class QRCodeGenerator:
     def __init__(self, url_shortener: URLShortener):
         self.url_shortener = url_shortener
-    
-    def generate_qr_code(self, url: str) -> str:
+
+    def generate_qr_code(self, url: str, base_url: str) -> str:
         """
         Generates a QR code for the shortened URL.
         
@@ -20,7 +20,7 @@ class QRCodeGenerator:
         if not url:
             raise ValueError("URL must not be empty")
         
-        short_url = self.url_shortener.shorten_url(url)
+        short_url = self.url_shortener.shorten_url(url, base_url)
         if not short_url:
             raise ValueError("Failed to generate short URL")
         

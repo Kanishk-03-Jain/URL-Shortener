@@ -63,27 +63,12 @@ def shorten_url():
         return jsonify({"error": f"URL too long (max {config.MAX_URL_LENGTH} characters)"}), 400
     
     try:
-        existing_hash = database_service.get_existing_hash(url)
-        if existing_hash:
-            base_url = request.base_url[:-len('/shorten')]
-            short_url = f"{base_url}/{existing_hash}"
-            logger.info(f"URL already exists, returning existing short URL")
-            return jsonify({"short_url": short_url}), 200
-        
-        hash = url_shortener.get_url_hash(url)
-        if not hash:
-            return jsonify({"error": "Failed to generate hash"}), 500
-        
-        database_service.store_hash(url, hash)
-        
         base_url = request.base_url[:-len('/shorten')]
-        short_url = f"{base_url}/{hash}"
-        logger.info(f"Created short URL for original URL")
-        
+        short_url = url_shortener.shorten_url(url, base_url)
         return jsonify({"short_url": short_url}), 201
     except Exception as e:
         logger.error(f"Error shortening URL: {str(e)}")
-        return jsonify({"error": "Internal server error"}), 500
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 
 @app.route('/generate_qr', methods=['POST'])
 def generate_qr_code():
@@ -108,12 +93,13 @@ def generate_qr_code():
     
     try:
         qr_generator = QRCodeGenerator(url_shortener)
-        qr_code = qr_generator.generate_qr_code(url)
+        base_url = request.base_url[:-len('/generate_qr')]
+        qr_code = qr_generator.generate_qr_code(url, base_url)
         logger.info(f"Generated QR code for URL")
         return jsonify(qr_code), 200
     except Exception as e:
         logger.error(f"Error generating QR code: {str(e)}")
-        return jsonify({"error": "Internal server error"}), 500
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 
 @app.route('/<hash>', methods=['GET'])
 def redirect_to_original(hash):
@@ -144,7 +130,7 @@ def redirect_to_original(hash):
         # return jsonify({"original_url": original_url}), 302
     except Exception as e:
         logger.error(f"Error during redirect: {str(e)}")
-        return jsonify({"error": "Internal server error"}), 500
+        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
 
 if __name__ == '__main__':
     app.run(debug=config.DEBUG, host='0.0.0.0', port=5000)
