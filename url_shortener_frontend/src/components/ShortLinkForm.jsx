@@ -62,7 +62,7 @@ function ShortLinkForm({ onResult, onError }) {
   return (
     <div className="form-container">
       <h2 className="form-title">Shorten a long link</h2>
-      <p className="form-subtitle">No credit card required.</p>
+      <p className="form-subtitle">Get your shortened link.</p>
       
       <form onSubmit={handleSubmit} className="url-form">
         <div className="input-container">
