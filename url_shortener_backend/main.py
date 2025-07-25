@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, redirect
 from flask_cors import CORS
 from services.databaseServices import DatabaseService
 from routes.shortener import URLShortener
+from routes.generate_qrcode import QRCodeGenerator
 from utilities.hashing import Hasher
 import logging
 import re
@@ -82,6 +83,36 @@ def shorten_url():
         return jsonify({"short_url": short_url}), 201
     except Exception as e:
         logger.error(f"Error shortening URL: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+@app.route('/generate_qr', methods=['POST'])
+def generate_qr_code():
+    """
+    Generates a QR code for the shortened URL.
+    Args:
+        short_url (str): The shortened URL to generate a QR code for.
+    Returns:
+        dict: A dictionary containing the base64-encoded QR code image.
+    """
+    if not request.is_json:
+        return jsonify({"error": "Content-Type must be application/json"}), 400
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid JSON"}), 400
+    
+    url = data.get('url')
+    
+    if not url:
+        return jsonify({"error": "URL is required"}), 400
+    
+    try:
+        qr_generator = QRCodeGenerator(url_shortener)
+        qr_code = qr_generator.generate_qr_code(url)
+        logger.info(f"Generated QR code for URL")
+        return jsonify(qr_code), 200
+    except Exception as e:
+        logger.error(f"Error generating QR code: {str(e)}")
         return jsonify({"error": "Internal server error"}), 500
 
 @app.route('/<hash>', methods=['GET'])
